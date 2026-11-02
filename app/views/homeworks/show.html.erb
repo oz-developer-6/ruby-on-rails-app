@@ -1,0 +1,100 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= @homework.title %></h1>
+    <p style="color: #64748b; font-size: 0.95rem;">
+      School: <%= link_to @homework.school.name, school_path(@homework.school) %> |
+      Subject: <%= @homework.subject %> |
+      Max Score: <%= @homework.max_score %> |
+      Due: <%= @homework.due_date %>
+      <% if @homework.overdue? %>
+        <span class="badge badge-resubmission">Overdue</span>
+      <% end %>
+    </p>
+  </div>
+  <div class="action-buttons">
+    <%= button_to "Assign to All Students", assign_all_homework_path(@homework), method: :post, class: "btn btn-success", id: "assign-all-btn" %>
+    <a href="<%= new_marking_path(homework_id: @homework.id) %>" class="btn btn-primary">Add Submission</a>
+    <a href="<%= edit_homework_path(@homework) %>" class="btn btn-secondary">Edit</a>
+  </div>
+</div>
+
+<% if @homework.description.present? %>
+  <div class="card">
+    <div class="card-header">Assignment Description</div>
+    <div class="card-body">
+      <%= simple_format(@homework.description) %>
+    </div>
+  </div>
+<% end %>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Assigned Students</div>
+    <div class="stat-value"><%= @homework.markings.count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Marked Submissions</div>
+    <div class="stat-value"><%= @homework.marked_markings.count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Average Score</div>
+    <div class="stat-value"><%= @homework.average_score %> / <%= @homework.max_score %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Average Percentage</div>
+    <div class="stat-value"><%= @homework.average_percentage %>%</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Student Submissions (<%= @markings.count %>)</div>
+  <div class="table-responsive">
+    <table class="data-table" id="homework-submissions-table">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Enrollment</th>
+          <th>Score</th>
+          <th>Grade</th>
+          <th>Status</th>
+          <th>Feedback</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @markings.empty? %>
+          <tr>
+            <td colspan="7" style="text-align: center; color: #64748b;">No submissions or markings yet. Click "Assign to All Students" or "Add Submission".</td>
+          </tr>
+        <% else %>
+          <% @markings.each do |marking| %>
+            <tr id="marking-row-<%= marking.id %>">
+              <td><%= link_to marking.student.full_name, student_path(marking.student) %></td>
+              <td><code><%= marking.student.enrollment_number %></code></td>
+              <td>
+                <% if marking.score.present? %>
+                  <strong><%= marking.score %></strong> / <%= @homework.max_score %>
+                <% else %>
+                  <span style="color: #94a3b8;">Pending</span>
+                <% end %>
+              </td>
+              <td>
+                <span class="badge badge-grade"><%= marking.grade_letter %></span>
+              </td>
+              <td>
+                <span class="badge badge-<%= marking.status %>"><%= marking.status.titleize %></span>
+              </td>
+              <td><%= marking.feedback.presence || "-" %></td>
+              <td>
+                <div class="action-buttons">
+                  <a href="<%= edit_marking_path(marking) %>" class="btn btn-primary btn-sm">Grade</a>
+                  <a href="<%= marking_path(marking) %>" class="btn btn-secondary btn-sm">Details</a>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

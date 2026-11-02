@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h1 class="page-title">Homework Assignments</h1>
+  <a href="/homeworks/new" class="btn btn-primary" id="add-homework-btn">Create Homework</a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="data-table" id="homeworks-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Subject</th>
+          <th>School</th>
+          <th>Max Score</th>
+          <th>Due Date</th>
+          <th>Submissions</th>
+          <th>Average Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @homeworks.empty? %>
+          <tr>
+            <td colspan="8" style="text-align: center; color: #64748b;">No homework assignments found.</td>
+          </tr>
+        <% else %>
+          <% @homeworks.each do |hw| %>
+            <tr id="homework-row-<%= hw.id %>">
+              <td><strong><%= link_to hw.title, homework_path(hw) %></strong></td>
+              <td><%= hw.subject %></td>
+              <td><%= link_to hw.school.name, school_path(hw.school) %></td>
+              <td><%= hw.max_score %></td>
+              <td>
+                <%= hw.due_date %>
+                <% if hw.overdue? %>
+                  <span class="badge badge-resubmission">Overdue</span>
+                <% end %>
+              </td>
+              <td><%= hw.markings.count %></td>
+              <td><%= hw.average_score %></td>
+              <td>
+                <div class="action-buttons">
+                  <a href="<%= homework_path(hw) %>" class="btn btn-secondary btn-sm">View</a>
+                  <a href="<%= edit_homework_path(hw) %>" class="btn btn-secondary btn-sm">Edit</a>
+                  <%= button_to "Delete", homework_path(hw), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

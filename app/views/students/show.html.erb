@@ -1,0 +1,83 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= @student.full_name %></h1>
+    <p style="color: #64748b; font-size: 0.95rem;">
+      School: <%= link_to @student.school.name, school_path(@student.school) %> |
+      Enrollment: <code><%= @student.enrollment_number %></code> |
+      Email: <%= @student.email %>
+    </p>
+  </div>
+  <div class="action-buttons">
+    <a href="<%= edit_student_path(@student) %>" class="btn btn-secondary">Edit Student</a>
+    <a href="/students" class="btn btn-secondary">Back to Students</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Average Score</div>
+    <div class="stat-value"><%= @student.average_score %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Assigned Homeworks</div>
+    <div class="stat-value"><%= @student.markings.count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Completed Assignments</div>
+    <div class="stat-value"><%= @student.marked_submissions.count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Completion Rate</div>
+    <div class="stat-value"><%= @student.completion_rate_percentage %>%</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Homework Submissions & Grades</div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Homework Title</th>
+          <th>Subject</th>
+          <th>Score</th>
+          <th>Grade</th>
+          <th>Status</th>
+          <th>Feedback</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @markings.empty? %>
+          <tr>
+            <td colspan="7" style="text-align: center; color: #64748b;">No homework assignments found for this student.</td>
+          </tr>
+        <% else %>
+          <% @markings.each do |marking| %>
+            <tr>
+              <td><%= link_to marking.homework.title, homework_path(marking.homework) %></td>
+              <td><%= marking.homework.subject %></td>
+              <td>
+                <% if marking.score.present? %>
+                  <strong><%= marking.score %></strong> / <%= marking.homework.max_score %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+              <td>
+                <span class="badge badge-grade"><%= marking.grade_letter %></span>
+              </td>
+              <td>
+                <span class="badge badge-<%= marking.status %>"><%= marking.status.titleize %></span>
+              </td>
+              <td><%= marking.feedback.presence || "No feedback yet" %></td>
+              <td>
+                <a href="<%= edit_marking_path(marking) %>" class="btn btn-primary btn-sm">Mark</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

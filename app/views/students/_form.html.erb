@@ -1,0 +1,42 @@
+<%= form_with(model: student, local: true, html: { novalidate: true }) do |form| %>
+  <% if student.errors.any? %>
+    <div class="form-errors">
+      <div class="form-errors-title">Please correct the following errors:</div>
+      <ul class="form-errors-list">
+        <% student.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :school_id, "School", class: "form-label" %>
+    <%= form.collection_select :school_id, @schools, :id, :name, { prompt: "Select a School" }, { id: "student_school_id", class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :first_name, class: "form-label" %>
+    <%= form.text_field :first_name, id: "student_first_name", class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :last_name, class: "form-label" %>
+    <%= form.text_field :last_name, id: "student_last_name", class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :email, class: "form-label" %>
+    <%= form.email_field :email, id: "student_email", class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :enrollment_number, "Enrollment Number", class: "form-label" %>
+    <%= form.text_field :enrollment_number, id: "student_enrollment_number", class: "form-control", required: true %>
+  </div>
+
+  <div class="action-buttons">
+    <%= form.submit class: "btn btn-primary" %>
+    <a href="/students" class="btn btn-secondary">Cancel</a>
+  </div>
+<% end %>

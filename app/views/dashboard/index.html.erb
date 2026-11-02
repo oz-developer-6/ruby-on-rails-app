@@ -1,0 +1,114 @@
+<div class="page-header">
+  <h1 class="page-title">Homework Marking Overview</h1>
+  <div class="action-buttons">
+    <a href="/schools/new" class="btn btn-primary">Add School</a>
+    <a href="/students/new" class="btn btn-secondary">Enroll Student</a>
+    <a href="/homeworks/new" class="btn btn-success">Create Homework</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Schools</div>
+    <div class="stat-value" id="total-schools-count"><%= @total_schools %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Students</div>
+    <div class="stat-value" id="total-students-count"><%= @total_students %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Homeworks</div>
+    <div class="stat-value" id="total-homeworks-count"><%= @total_homeworks %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Pending Markings</div>
+    <div class="stat-value" id="pending-markings-count"><%= @pending_count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Completed Markings</div>
+    <div class="stat-value" id="completed-markings-count"><%= @marked_count %></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Recent Homeworks</div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Subject</th>
+          <th>School</th>
+          <th>Due Date</th>
+          <th>Submissions</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @recent_homeworks.empty? %>
+          <tr>
+            <td colspan="6" style="text-align: center; color: #64748b;">No homework assignments found yet.</td>
+          </tr>
+        <% else %>
+          <% @recent_homeworks.each do |hw| %>
+            <tr>
+              <td><strong><%= link_to hw.title, homework_path(hw) %></strong></td>
+              <td><%= hw.subject %></td>
+              <td><%= hw.school.name %></td>
+              <td><%= hw.due_date %></td>
+              <td><%= hw.markings.count %></td>
+              <td>
+                <a href="<%= homework_path(hw) %>" class="btn btn-secondary btn-sm">View</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Recent Markings Activity</div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Homework</th>
+          <th>Score</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @recent_markings.empty? %>
+          <tr>
+            <td colspan="5" style="text-align: center; color: #64748b;">No marking records yet.</td>
+          </tr>
+        <% else %>
+          <% @recent_markings.each do |marking| %>
+            <tr>
+              <td><%= link_to marking.student.full_name, student_path(marking.student) %></td>
+              <td><%= link_to marking.homework.title, homework_path(marking.homework) %></td>
+              <td>
+                <% if marking.score.present? %>
+                  <strong><%= marking.score %></strong> / <%= marking.homework.max_score %>
+                  <span class="badge badge-grade"><%= marking.grade_letter %></span>
+                <% else %>
+                  <span style="color: #94a3b8;">Unmarked</span>
+                <% end %>
+              </td>
+              <td>
+                <span class="badge badge-<%= marking.status %>"><%= marking.status.titleize %></span>
+              </td>
+              <td>
+                <a href="<%= marking_path(marking) %>" class="btn btn-secondary btn-sm">Review</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

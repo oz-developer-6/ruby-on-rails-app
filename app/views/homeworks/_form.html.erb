@@ -1,0 +1,47 @@
+<%= form_with(model: homework, local: true, html: { novalidate: true }) do |form| %>
+  <% if homework.errors.any? %>
+    <div class="form-errors">
+      <div class="form-errors-title">Please correct the following errors:</div>
+      <ul class="form-errors-list">
+        <% homework.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :school_id, "School", class: "form-label" %>
+    <%= form.collection_select :school_id, @schools, :id, :name, { prompt: "Select a School" }, { id: "homework_school_id", class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, id: "homework_title", class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :subject, class: "form-label" %>
+    <%= form.text_field :subject, id: "homework_subject", class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, id: "homework_description", class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :max_score, "Maximum Score", class: "form-label" %>
+    <%= form.number_field :max_score, id: "homework_max_score", class: "form-control", min: 1, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :due_date, "Due Date", class: "form-label" %>
+    <%= form.date_field :due_date, id: "homework_due_date", class: "form-control", required: true %>
+  </div>
+
+  <div class="action-buttons">
+    <%= form.submit class: "btn btn-primary" %>
+    <a href="/homeworks" class="btn btn-secondary">Cancel</a>
+  </div>
+<% end %>

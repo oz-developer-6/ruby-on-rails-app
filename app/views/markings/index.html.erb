@@ -1,0 +1,69 @@
+<div class="page-header">
+  <h1 class="page-title">Homework Markings</h1>
+  <div class="action-buttons">
+    <a href="/markings/new" class="btn btn-primary" id="new-marking-btn">Record Marking</a>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span style="font-weight: 600; color: #475569;">Filter by status:</span>
+  <a href="/markings" class="btn btn-secondary btn-sm">All</a>
+  <a href="/markings?status=pending" class="btn btn-secondary btn-sm">Pending</a>
+  <a href="/markings?status=marked" class="btn btn-secondary btn-sm">Marked</a>
+  <a href="/markings?status=resubmission_required" class="btn btn-secondary btn-sm">Resubmission</a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="data-table" id="markings-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>School</th>
+          <th>Homework</th>
+          <th>Score</th>
+          <th>Grade</th>
+          <th>Status</th>
+          <th>Feedback</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @markings.empty? %>
+          <tr>
+            <td colspan="8" style="text-align: center; color: #64748b;">No marking records match your selection.</td>
+          </tr>
+        <% else %>
+          <% @markings.each do |marking| %>
+            <tr id="marking-row-<%= marking.id %>">
+              <td><strong><%= link_to marking.student.full_name, student_path(marking.student) %></strong></td>
+              <td><%= marking.homework.school.name %></td>
+              <td><%= link_to marking.homework.title, homework_path(marking.homework) %></td>
+              <td>
+                <% if marking.score.present? %>
+                  <strong><%= marking.score %></strong> / <%= marking.homework.max_score %>
+                <% else %>
+                  <span style="color: #94a3b8;">Unmarked</span>
+                <% end %>
+              </td>
+              <td>
+                <span class="badge badge-grade"><%= marking.grade_letter %></span>
+              </td>
+              <td>
+                <span class="badge badge-<%= marking.status %>"><%= marking.status.titleize %></span>
+              </td>
+              <td><%= truncate(marking.feedback, length: 30) %></td>
+              <td>
+                <div class="action-buttons">
+                  <a href="<%= edit_marking_path(marking) %>" class="btn btn-primary btn-sm">Mark</a>
+                  <a href="<%= marking_path(marking) %>" class="btn btn-secondary btn-sm">View</a>
+                  <%= button_to "Delete", marking_path(marking), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1 class="page-title">Students</h1>
+  <a href="/students/new" class="btn btn-primary" id="add-student-btn">Enroll Student</a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="data-table" id="students-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Enrollment ID</th>
+          <th>School</th>
+          <th>Email</th>
+          <th>Average Score</th>
+          <th>Pass Count</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @students.empty? %>
+          <tr>
+            <td colspan="7" style="text-align: center; color: #64748b;">No students found.</td>
+          </tr>
+        <% else %>
+          <% @students.each do |student| %>
+            <tr id="student-row-<%= student.id %>">
+              <td><strong><%= link_to student.full_name, student_path(student) %></strong></td>
+              <td><code><%= student.enrollment_number %></code></td>
+              <td><%= link_to student.school.name, school_path(student.school) %></td>
+              <td><%= student.email %></td>
+              <td><strong><%= student.average_score %></strong></td>
+              <td><%= student.passed_markings_count %></td>
+              <td>
+                <div class="action-buttons">
+                  <a href="<%= student_path(student) %>" class="btn btn-secondary btn-sm">View</a>
+                  <a href="<%= edit_student_path(student) %>" class="btn btn-secondary btn-sm">Edit</a>
+                  <%= button_to "Delete", student_path(student), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

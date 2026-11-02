@@ -1,0 +1,57 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Marking Details</h1>
+    <p style="color: #64748b; font-size: 0.95rem;">
+      Homework: <%= link_to @marking.homework.title, homework_path(@marking.homework) %> |
+      Student: <%= link_to @marking.student.full_name, student_path(@marking.student) %> (<%= @marking.student.school.name %>)
+    </p>
+  </div>
+  <div class="action-buttons">
+    <a href="<%= edit_marking_path(@marking) %>" class="btn btn-primary">Edit Grade</a>
+    <a href="<%= homework_path(@marking.homework) %>" class="btn btn-secondary">Back to Homework</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Score Awarded</div>
+    <div class="stat-value">
+      <% if @marking.score.present? %>
+        <%= @marking.score %> / <%= @marking.homework.max_score %>
+      <% else %>
+        -
+      <% end %>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Percentage</div>
+    <div class="stat-value"><%= @marking.percentage.present? ? "#{@marking.percentage}%" : "-" %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Grade Letter</div>
+    <div class="stat-value"><%= @marking.grade_letter %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Status</div>
+    <div class="stat-value">
+      <span class="badge badge-<%= @marking.status %>"><%= @marking.status.titleize %></span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Teacher Feedback</div>
+  <div class="card-body">
+    <% if @marking.feedback.present? %>
+      <%= simple_format(@marking.feedback) %>
+    <% else %>
+      <p style="color: #64748b;">No feedback provided.</p>
+    <% end %>
+
+    <% if @marking.marked_at.present? %>
+      <p style="margin-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
+        Marked at: <%= @marking.marked_at.strftime("%B %d, %Y %H:%M") %>
+      </p>
+    <% end %>
+  </div>
+</div>

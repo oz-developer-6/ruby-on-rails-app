@@ -1,0 +1,53 @@
+<%= form_with(model: marking, local: true, html: { novalidate: true }) do |form| %>
+  <% if marking.errors.any? %>
+    <div class="form-errors">
+      <div class="form-errors-title">Please correct the following errors:</div>
+      <ul class="form-errors-list">
+        <% marking.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if marking.new_record? %>
+    <div class="form-group">
+      <%= form.label :homework_id, "Homework", class: "form-label" %>
+      <%= form.collection_select :homework_id, @homeworks, :id, lambda { |h| "#{h.title} (#{h.school.name} - Max #{h.max_score})" }, { prompt: "Select Homework" }, { id: "marking_homework_id", class: "form-control", required: true } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :student_id, "Student", class: "form-label" %>
+      <%= form.collection_select :student_id, @students, :id, lambda { |s| "#{s.full_name} (#{s.school.name} - #{s.enrollment_number})" }, { prompt: "Select Student" }, { id: "marking_student_id", class: "form-control", required: true } %>
+    </div>
+  <% else %>
+    <div class="form-group">
+      <label class="form-label">Homework</label>
+      <input type="text" class="form-control" value="<%= marking.homework.title %> (Max Score: <%= marking.homework.max_score %>)" disabled>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Student</label>
+      <input type="text" class="form-control" value="<%= marking.student.full_name %> (<%= marking.student.enrollment_number %>)" disabled>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :status, "Marking Status", class: "form-label" %>
+    <%= form.select :status, [["Pending", "pending"], ["Marked", "marked"], ["Resubmission Required", "resubmission_required"]], {}, { id: "marking_status", class: "form-control" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :score, "Awarded Score", class: "form-label" %>
+    <%= form.number_field :score, id: "marking_score", class: "form-control", step: 0.1, min: 0 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :feedback, "Teacher Feedback & Notes", class: "form-label" %>
+    <%= form.text_area :feedback, id: "marking_feedback", class: "form-control", rows: 4 %>
+  </div>
+
+  <div class="action-buttons">
+    <%= form.submit "Save Marking", class: "btn btn-primary" %>
+    <a href="/markings" class="btn btn-secondary">Cancel</a>
+  </div>
+<% end %>

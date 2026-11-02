@@ -1,0 +1,104 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= @school.name %></h1>
+    <p style="color: #64748b; font-size: 0.95rem;">Code: <code><%= @school.code %></code> | <%= @school.address.presence || "No address provided" %></p>
+  </div>
+  <div class="action-buttons">
+    <a href="<%= new_student_path(school_id: @school.id) %>" class="btn btn-primary">Enroll Student</a>
+    <a href="<%= new_homework_path(school_id: @school.id) %>" class="btn btn-success">Publish Homework</a>
+    <a href="<%= edit_school_path(@school) %>" class="btn btn-secondary">Edit School</a>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Enrolled Students</div>
+    <div class="stat-value"><%= @school.student_count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Homeworks</div>
+    <div class="stat-value"><%= @school.homework_count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Average Score</div>
+    <div class="stat-value"><%= @school.average_score %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Completion Rate</div>
+    <div class="stat-value"><%= @school.completion_rate_percentage %>%</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Enrolled Students (<%= @students.count %>)</div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Enrollment ID</th>
+          <th>Email</th>
+          <th>Average Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @students.empty? %>
+          <tr>
+            <td colspan="5" style="text-align: center; color: #64748b;">No students enrolled yet.</td>
+          </tr>
+        <% else %>
+          <% @students.each do |student| %>
+            <tr>
+              <td><%= link_to student.full_name, student_path(student) %></td>
+              <td><code><%= student.enrollment_number %></code></td>
+              <td><%= student.email %></td>
+              <td><%= student.average_score %></td>
+              <td>
+                <a href="<%= student_path(student) %>" class="btn btn-secondary btn-sm">View</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Homework Assignments (<%= @homeworks.count %>)</div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Subject</th>
+          <th>Due Date</th>
+          <th>Submissions</th>
+          <th>Average Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @homeworks.empty? %>
+          <tr>
+            <td colspan="6" style="text-align: center; color: #64748b;">No homework assigned yet.</td>
+          </tr>
+        <% else %>
+          <% @homeworks.each do |hw| %>
+            <tr>
+              <td><%= link_to hw.title, homework_path(hw) %></td>
+              <td><%= hw.subject %></td>
+              <td><%= hw.due_date %></td>
+              <td><%= hw.markings.count %></td>
+              <td><%= hw.average_score %></td>
+              <td>
+                <a href="<%= homework_path(hw) %>" class="btn btn-secondary btn-sm">View</a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
