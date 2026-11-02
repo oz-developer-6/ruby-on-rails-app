@@ -8,7 +8,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
@@ -16,5 +16,5 @@ gem "bootsnap", require: false
 
 group :development, :test do
   gem "rspec-rails", "~> 8.0"
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", platforms: %i[ mri ], require: "debug/prelude"
 end
