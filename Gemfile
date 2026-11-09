@@ -15,6 +15,6 @@ gem "solid_cable"
 gem "bootsnap", require: false
 
 group :development, :test do
-  gem "rspec-rails", "~> 8.0"
+  gem "rspec-rails", "~> 8.1"
   gem "debug", platforms: %i[ mri ], require: "debug/prelude"
 end
